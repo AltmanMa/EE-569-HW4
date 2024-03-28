@@ -1,5 +1,5 @@
 folderPath = 'EE569_2024Spring_HW4_materials/train';
-newFolderPath = 'train_energy';
+newFolderPath = 'train_data';
 
 % 获取文件夹中所有.raw文件
 rawFiles = dir(fullfile(folderPath, '*.raw'));
@@ -13,11 +13,7 @@ R5 = [1 -4 6 -4 1];
 
 % 创建25个5x5的Laws滤波器
 filterBank = {
-    conv2(L5', L5), conv2(L5', E5), conv2(L5', S5), conv2(L5', W5), conv2(L5', R5),
-    conv2(E5', L5), conv2(E5', E5), conv2(E5', S5), conv2(E5', W5), conv2(E5', R5),
-    conv2(S5', L5), conv2(S5', E5), conv2(S5', S5), conv2(S5', W5), conv2(S5', R5),
-    conv2(W5', L5), conv2(W5', E5), conv2(W5', S5), conv2(W5', W5), conv2(W5', R5),
-    conv2(R5', L5), conv2(R5', E5), conv2(R5', S5), conv2(R5', W5), conv2(R5', R5)
+    conv2(L5', L5), conv2(L5', E5), conv2(L5', S5), conv2(L5', W5), conv2(L5', R5), conv2(E5', L5), conv2(E5', E5), conv2(E5', S5), conv2(E5', W5), conv2(E5', R5), conv2(S5', L5), conv2(S5', E5), conv2(S5', S5), conv2(S5', W5), conv2(S5', R5), conv2(W5', L5), conv2(W5', E5), conv2(W5', S5), conv2(W5', W5), conv2(W5', R5), conv2(R5', L5), conv2(R5', E5), conv2(R5', S5), conv2(R5', W5), conv2(R5', R5)
 };
 
 % 遍历文件列表
@@ -46,8 +42,8 @@ for file = rawFiles'
     % reducedFeatures = applyPCA(energyFeatures);  % 注意: 你需要实现applyPCA函数
     
     % 根据原始文件名保存处理后的数据为.mat文件
-    saveFilename = fullfile(newFolderPath, replace(file.name, '.raw', '_energy.mat'));
-    save(saveFilename, 'energyFeatures');  % 或'reducedFeatures'，如果你应用了PCA
+    saveFilename = fullfile(newFolderPath, replace(file.name, '.raw', '_filters.mat'));
+    save(saveFilename, 'filterResponses');  % 或'reducedFeatures'，如果你应用了PCA
 end
 
 
