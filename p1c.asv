@@ -1,0 +1,66 @@
+% Specify the paths to the folders containing the training and test data
+trainEnergyFolderPath = 'train_energy'; % Path to folder containing training energy feature files
+trainPCAFolderPath = 'train_pca'; % Path to folder containing training PCA feature files
+testEnergyFolderPath = 'test_energy'; % Path to folder containing test energy feature files
+testPCAFolderPath = 'test_pca'; % Path to folder containing test PCA feature files
+
+% Load training labels (assuming you have them)
+% Replace this with the code to load your training labels
+trainLabels = load_training_labels(); % Replace with your actual code
+
+% Load test labels (assuming you have them)
+% Replace this with the code to load your test labels
+testLabels = load_test_labels(); % Replace with your actual code
+
+% Initialize arrays to store predicted labels
+predictedLabels25D = zeros(length(testLabels), 1);
+predictedLabels3D = zeros(length(testLabels), 1);
+
+% Train and predict using 25-D features
+% Load and concatenate training features
+trainFeatures25D = [];
+trainFiles = dir(fullfile(trainEnergyFolderPath, '*.mat'));
+for i = 1:length(trainFiles)
+    trainData = load(fullfile(trainEnergyFolderPath, trainFiles(i).name));
+    trainFeatures25D = [trainFeatures25D; trainData.energyFeatures];
+end
+
+% Train SVM model
+svmModel25D = fitcecoc(trainFeatures25D, trainLabels);
+
+% Load and predict using test features
+testFiles = dir(fullfile(testEnergyFolderPath, '*.mat'));
+for i = 1:length(testFiles)
+    testData = load(fullfile(testEnergyFolderPath, testFiles(i).name));
+    testFeatures25D = testData.energyFeatures;
+    predictedLabels25D(i) = predict(svmModel25D, testFeatures25D);
+end
+
+% Calculate error rate for 25-D features
+errorRate25D = sum(predictedLabels25D ~= testLabels) / length(testLabels);
+disp(['Error rate for 25-D features: ', num2str(errorRate25D)]);
+
+% Train and predict using reduced 3-D features via PCA
+% Load and concatenate training features
+trainFeatures3D = [];
+trainFiles = dir(fullfile(trainPCAFolderPath, '*.mat'));
+for i = 1:length(trainFiles)
+    trainData = load(fullfile(trainPCAFolderPath, trainFiles(i).name));
+    trainFeatures3D = [trainFeatures3D; trainData.PCAFeatures];
+end
+
+% Train SVM model
+svmModel3D = fitcecoc(trainFeatures3D, trainLabels);
+
+% Load and predict using test features
+testFiles = dir(fullfile(testPCAFolderPath, '*.mat'));
+for i = 1:length(testFiles)
+    testData = load(fullfile(testPCAFolderPath, testFiles(i).name));
+    testFeatures3D = testData.PCAFeatures;
+    predictedLabels3D(i) = predict(svmModel3D, testFeatures3D);
+end
+
+% Calculate error rate for 3-D features via PCA
+errorRate3D = sum(predictedLabels3D ~= testLabels) / length(testLabels);
+disp(['Error rate for 3-D features via PCA: ', num2str(errorRate3D)]);
+

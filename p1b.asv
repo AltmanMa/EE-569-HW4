@@ -1,0 +1,53 @@
+% Specify the paths to the folders containing the test data
+energyFolderPath = 'test_energy'; % Change to the path of the folder containing energy feature files
+pcaFolderPath = 'test_pca'; % Change to the path of the folder containing PCA feature files
+
+% Get the list of .mat files in the energy folder
+energyFiles = dir(fullfile(energyFolderPath, '*.mat'));
+
+% Get the list of .mat files in the PCA folder
+pcaFiles = dir(fullfile(pcaFolderPath, '*.mat'));
+
+% Initialize arrays to store energy features and PCA features
+allEnergyFeatures = [];
+allPCAFeatures = [];
+
+% Load all energy features
+for i = 1:length(energyFiles)
+    % Load energy features
+    energyData = load(fullfile(energyFolderPath, energyFiles(i).name));
+    energyFeatures = energyData.energyFeatures;
+    
+    % Append to the list of energy features
+    allEnergyFeatures = [allEnergyFeatures; energyFeatures];
+end
+
+% Load all PCA features
+for i = 1:length(pcaFiles)
+    % Load PCA features
+    pcaData = load(fullfile(pcaFolderPath, pcaFiles(i).name));
+    PCAFeatures = pcaData.pcaFeatures;
+    
+    % Append to the list of PCA features
+    allPCAFeatures = [allPCAFeatures; PCAFeatures];
+end
+
+% Number of clusters (assume K = 4)
+K = 4;
+
+% Perform K-means clustering on energy features
+[idxEnergy, centroidsEnergy] = kmeans(allEnergyFeatures, K);
+
+% Perform K-means clustering on PCA features
+[idxPCA, centroidsPCA] = kmeans(allPCAFeatures, K);
+
+% Display cluster labels and centroids
+disp('Cluster labels for energy features:');
+disp(idxEnergy);
+disp('Centroids for energy features:');
+disp(centroidsEnergy);
+
+disp('Cluster labels for PCA features:');
+disp(idxPCA);
+disp('Centroids for PCA features:');
+disp(centroidsPCA);
