@@ -5,7 +5,7 @@ testPCAFolderPath = 'test_pca';
 
 trainLabels = [ones(9, 1); 2 * ones(9, 1); 3 * ones(9, 1); 4 * ones(9, 1)];
 
-testLabels = [2 1 4 1 4 3 3 4 2 2 1 3];
+testLabels = [2 1 3 2 1 4 1 4 3 3 4 2 ];
 
 % Initialize arrays to store predicted labels
 predictedLabels25D = zeros(length(testLabels), 1);
@@ -20,7 +20,9 @@ for i = 1:length(trainFiles25D)
 end
 
 % Train SVM model
-svmModel25D = fitcecoc(trainFeatures25D, trainLabels);
+template = templateSVM('Standardize', true, 'KernelFunction','gaussian', 'SaveSupportVectors', true);
+
+svmModel25D = fitcecoc(trainFeatures25D, trainLabels, 'Learners', template);
 
 % Load and predict using test features
 testFiles25D = dir(fullfile(testEnergyFolderPath, '*.mat'));
@@ -43,7 +45,7 @@ for i = 1:length(trainFiles3D)
 end
 
 % Train SVM model
-svmModel3D = fitcecoc(trainFeatures3D, trainLabels);
+svmModel3D = fitcecoc(trainFeatures3D, trainLabels, 'Learners', template);
 
 % Load and predict using test features
 testFiles3D = dir(fullfile(testPCAFolderPath, '*.mat'));

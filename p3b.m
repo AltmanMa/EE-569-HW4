@@ -117,3 +117,34 @@ imshow(Cat3);
 title('Cat3');
 hold on;
 plot(f3(1,matches3(2,:)),f3(2,matches3(2,:)),'ro');
+
+%find max scale point in Dog1
+
+distances41 = pdist2(max_scale_keypoint1', f4(1:2, :)'); 
+[min_dist41, min_dist_idx41] = min(distances41); 
+closest_neighbor_keypoint14 = f4(1:2, min_dist_idx41); 
+
+figure;
+subplot(1, 2, 1);
+imshow(Cat1);
+hold on;
+plot(max_scale_keypoint1(1), max_scale_keypoint1(2), 'r*');
+title('Key Point with max scale in Cat1');
+
+subplot(1, 2, 2);
+imshow(Dog1);
+hold on;
+plot(closest_neighbor_keypoint14(1), closest_neighbor_keypoint14(2), 'r*');
+title('closest neighboring key point in Dog1');
+
+figure;
+subplot(1,2,1);
+imshow(Cat1);
+title('Cat1');
+hold on;
+plot(f1(1,matches4(1,:)),f1(2,matches4(1,:)),'ro');
+subplot(1,2,2);
+imshow(Dog1);
+title('Dog1');
+hold on;
+plot(f4(1,matches4(2,:)),f4(2,matches4(2,:)),'ro');

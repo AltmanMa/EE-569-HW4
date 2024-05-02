@@ -24,24 +24,25 @@ for i = 1:numFilters
 end
 
 
-windowSize = 3; 
+windowSize = 10; 
 energyMap = zeros(numRows, numCols, numFilters);
 for i = 1:numFilters
     energyMap(:, :, i) = conv2(energyFeatures(:, :, i).^2, ones(windowSize)/(windowSize^2), 'same');
 end
 
 
-L5TL5_energy = energyMap(:, :, 21); 
+L5TL5_energy = energyMap(:, :, 1); 
 normalizedEnergyMap = energyMap;
 for i = 1:numFilters
-    if i ~= 21 
+    if i ~= 1 
         normalizedEnergyMap(:, :, i) = energyMap(:, :, i) ./ (L5TL5_energy + eps);
     end
 end
 
 numTextures = 5; 
+normalizedEnergyMap24 = normalizedEnergyMap(: , : , 2:end);
 features = reshape(normalizedEnergyMap, [], numFilters);
-[~, centroids] = kmeans(features, numTextures); 
+[~, centroids] = kmeans(features, numTextures, 'MaxIter', 2000); 
 centroids = double(centroids);
 
 idx = dsearchn(centroids, features); 
@@ -53,4 +54,3 @@ colormap(jet(numTextures));
 colorbar;
 title('Segmented Image');
 
-imwrite(segmented_image, 'segmented_image_a.png');

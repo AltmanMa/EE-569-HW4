@@ -25,10 +25,10 @@ end
 K = 4;
 
 % Perform K-means clustering on energy features
-label_25 = kmeans(allEnergyFeatures', K);
+label_25 = kmeans(allEnergyFeatures, K);
 
 % Perform K-means clustering on PCA features
-label_pca = kmeans(allPCAFeatures', K);
+label_pca = kmeans(allPCAFeatures, K);
 
 disp('Cluster labels for energy features:');
 disp(num2str(label_25'));
